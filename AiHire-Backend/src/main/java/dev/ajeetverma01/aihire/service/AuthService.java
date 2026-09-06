@@ -4,6 +4,7 @@ import dev.ajeetverma01.aihire.dto.AuthResponse;
 import dev.ajeetverma01.aihire.dto.RegisterRequest;
 import dev.ajeetverma01.aihire.entity.Role;
 import dev.ajeetverma01.aihire.entity.User;
+import dev.ajeetverma01.aihire.exception.DuplicateResourceException;
 import dev.ajeetverma01.aihire.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class AuthService {
 
         // 1. Check whether email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email is already registered");
+            throw new DuplicateResourceException("Email is already registered");
         }
 
         // 2. Create user
