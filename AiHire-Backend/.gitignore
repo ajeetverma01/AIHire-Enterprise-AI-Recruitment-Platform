@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+# Environment variables
+.env
+
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+
+# OS
+.DS_Store
+Thumbs.db

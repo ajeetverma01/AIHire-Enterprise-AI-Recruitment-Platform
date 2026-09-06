@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: aihire-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:aihire}
+      POSTGRES_USER: ${POSTGRES_USER:aihire}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:aihire_password}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - aihire-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  aihire-postgres-data:
