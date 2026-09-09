@@ -43,7 +43,7 @@ public class AuthService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.CANDIDATE)
+                .role(Role.RECRUITER)
                 .build();
 
         // 3. Save user
