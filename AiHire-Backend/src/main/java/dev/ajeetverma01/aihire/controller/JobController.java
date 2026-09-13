@@ -1,5 +1,6 @@
 package dev.ajeetverma01.aihire.controller;
 
+import dev.ajeetverma01.aihire.dto.ChangeJobStatusRequest;
 import dev.ajeetverma01.aihire.dto.CreateJobRequest;
 import dev.ajeetverma01.aihire.dto.JobResponse;
 import dev.ajeetverma01.aihire.dto.UpdateJobRequest;
@@ -94,5 +95,15 @@ public class JobController {
         jobService.deleteJob(jobId, recruiterEmail);
 
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PatchMapping("/{jobId}/status")
+    public ResponseEntity<JobResponse> changeJobStatus(@PathVariable UUID jobId,
+                                                       @Valid @RequestBody ChangeJobStatusRequest request,
+                                                       Authentication authentication) {
+        String recEmail = authentication.getName();
+        JobResponse res = jobService.changeJobStatus(jobId, request, recEmail);
+        return ResponseEntity.ok(res);
     }
 }

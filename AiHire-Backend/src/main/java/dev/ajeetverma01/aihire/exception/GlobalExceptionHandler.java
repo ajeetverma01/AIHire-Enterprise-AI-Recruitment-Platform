@@ -116,4 +116,19 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(InvalidJobStatusTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidJobStatusTransition(
+            InvalidJobStatusTransitionException exception
+    ) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
 }

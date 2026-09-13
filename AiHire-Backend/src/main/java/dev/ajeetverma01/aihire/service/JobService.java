@@ -1,10 +1,13 @@
 package dev.ajeetverma01.aihire.service;
 
+import dev.ajeetverma01.aihire.dto.ChangeJobStatusRequest;
 import dev.ajeetverma01.aihire.dto.CreateJobRequest;
 import dev.ajeetverma01.aihire.dto.JobResponse;
 import dev.ajeetverma01.aihire.dto.UpdateJobRequest;
 import dev.ajeetverma01.aihire.entity.Job;
+import dev.ajeetverma01.aihire.entity.JobStatus;
 import dev.ajeetverma01.aihire.entity.User;
+import dev.ajeetverma01.aihire.exception.InvalidJobStatusTransitionException;
 import dev.ajeetverma01.aihire.exception.JobNotFoundException;
 import dev.ajeetverma01.aihire.exception.UnauthorizedAccessException;
 import dev.ajeetverma01.aihire.exception.UserNotFoundException;
@@ -161,5 +164,33 @@ public class JobService {
         }
 
         jobRepository.delete(job);
+    }
+
+
+    public JobResponse changeJobStatus(UUID jobId, ChangeJobStatusRequest req, String recEmail){
+        User recruiter = userRepository.findByEmail(recEmail).orElseThrow(()->new UserNotFoundException("Recruiter " +
+                "not found"));
+        Job job = jobRepository.findById(jobId).orElseThrow(()-> new JobNotFoundException("Job not found"));
+        if (!job.getRecruiter().getId().equals(recruiter.getId())) {
+            throw new UnauthorizedAccessException(
+                    "You are not allowed to change this job status"
+            );
+        }
+        JobStatus currentStatus = job.getStatus();
+        JobStatus newStatus = req.status();
+        if (currentStatus == JobStatus.DRAFT && newStatus == JobStatus.OPEN) {
+            job.setStatus(JobStatus.OPEN);
+        } else if (currentStatus == JobStatus.OPEN && newStatus == JobStatus.CLOSED) {
+            job.setStatus(JobStatus.CLOSED);
+        } else {
+            throw new InvalidJobStatusTransitionException(
+                    "Invalid job status transition from "
+                            + currentStatus + " to " + newStatus
+            );
+        }
+
+        Job updatedJob = jobRepository.save(job);
+
+        return mapToResponse(updatedJob);
     }
 }
