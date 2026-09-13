@@ -448,3 +448,33 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.btn-danger {
+    background: #2a1616;
+    color: #ff7b7b;
+    border: 1px solid #4a2323;
+}
+
+.btn-danger:hover {
+    background: #3a1c1c;
+    color: #ff9b9b;
+}
+.btn-success {
+    background: #162a1d;
+    color: #7ee2a8;
+    border: 1px solid #285238;
+}
+
+.btn-success:hover {
+    background: #1d3826;
+}
+
+.btn-warning {
+    background: #2a2416;
+    color: #e8c875;
+    border: 1px solid #4a3d23;
+}
+
+.btn-warning:hover {
+    background: #3a311c;
+}

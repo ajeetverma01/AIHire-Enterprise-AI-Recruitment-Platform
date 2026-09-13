@@ -31,8 +31,8 @@ function RecruiterDashboard() {
         }
     };
 
-    const publishedJobs = jobs.filter(
-        (job) => job.status === "PUBLISHED"
+    const openJobs = jobs.filter(
+        (job) => job.status === "OPEN"
     ).length;
 
     const draftJobs = jobs.filter(
@@ -66,8 +66,8 @@ function RecruiterDashboard() {
                     </div>
 
                     <div className="stat-card">
-                        <span>Published</span>
-                        <strong>{publishedJobs}</strong>
+                        <span>Open Jobs</span>
+                        <strong>{openJobs}</strong>
                     </div>
 
                     <div className="stat-card">

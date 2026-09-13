@@ -40,6 +40,76 @@ function MyJobs() {
             setLoading(false);
 
         }
+
+
+    };
+
+
+    const handleDelete = async (jobId) => {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this job?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            await axiosClient.delete(`/api/recruiter/jobs/${jobId}`);
+
+            toast.success("Job deleted successfully!");
+
+            setJobs((previousJobs) =>
+                previousJobs.filter((job) => job.id !== jobId)
+            );
+        } catch (error) {
+            console.error("Failed to delete job:", error);
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to delete job."
+            );
+        }
+    };
+
+    const handleStatusChange = async (jobId, status) => {
+        const action = status === "OPEN" ? "open" : "close";
+
+        const confirmed = window.confirm(
+            `Are you sure you want to ${action} this job?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await axiosClient.patch(
+                `/api/recruiter/jobs/${jobId}/status`,
+                {
+                    status: status,
+                }
+            );
+
+            toast.success(
+                status === "OPEN"
+                    ? "Job opened successfully!"
+                    : "Job closed successfully!"
+            );
+
+            setJobs((previousJobs) =>
+                previousJobs.map((job) =>
+                    job.id === jobId ? response.data : job
+                )
+            );
+        } catch (error) {
+            console.error("Failed to change job status:", error);
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to change job status."
+            );
+        }
     };
 
     return (
@@ -128,6 +198,29 @@ function MyJobs() {
                                             }
                                         >
                                             Edit
+                                        </button>
+                                        {job.status === "DRAFT" && (
+                                            <button
+                                                className="btn btn-success"
+                                                onClick={() => handleStatusChange(job.id, "OPEN")}
+                                            >
+                                                Open Job
+                                            </button>
+                                        )}
+
+                                        {job.status === "OPEN" && (
+                                            <button
+                                                className="btn btn-warning"
+                                                onClick={() => handleStatusChange(job.id, "CLOSED")}
+                                            >
+                                                Close Job
+                                            </button>
+                                        )}
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleDelete(job.id)}
+                                        >
+                                            Delete
                                         </button>
                                     </div>
 
