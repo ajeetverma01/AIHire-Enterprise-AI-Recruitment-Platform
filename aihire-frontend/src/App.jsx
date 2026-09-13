@@ -11,6 +11,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import CreateJob from "./pages/recruiter/CreateJob";
+import MyJobs from "./pages/recruiter/MyJobs";
+import JobDetails from "./pages/recruiter/JobDetails";
+import EditJob from "./pages/recruiter/EditJob";
 
 function App() {
   return (
@@ -55,6 +58,32 @@ function App() {
           element={
             <ProtectedRoute allowedRole="RECRUITER">
               <CreateJob />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/recruiter/jobs"
+          element={
+            <ProtectedRoute allowedRole="RECRUITER">
+              <MyJobs />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/jobs/:jobId"
+          element={
+            <ProtectedRoute allowedRole="RECRUITER">
+              <JobDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/jobs/:jobId/edit"
+          element={
+            <ProtectedRoute allowedRole="RECRUITER">
+              <EditJob />
             </ProtectedRoute>
           }
         />

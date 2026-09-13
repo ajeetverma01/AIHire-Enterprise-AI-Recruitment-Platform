@@ -29,7 +29,9 @@ function RecruiterSidebar() {
                     Dashboard
                 </button>
 
-                <button>
+                <button
+                    onClick={() => navigate("/recruiter/jobs")}
+                >
                     My Jobs
                 </button>
 
