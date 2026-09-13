@@ -1,65 +1,83 @@
 import { useState } from "react";
 import axiosClient from "../api/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    const navigate = useNavigate();
 
-    try {
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-      const response = await axiosClient.post("/api/auth/login", {
-        email,
-        password,
-      });
+        try {
 
-      console.log("Login successful:", response.data);
+            const response = await axiosClient.post("/api/auth/login", {
+                email,
+                password,
+            });
 
-    } catch (error) {
+            const { accessToken, refreshToken, userEmail, role } = response.data;
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+            localStorage.setItem("email", userEmail);
+            localStorage.setItem("role", role);
 
-      console.error("Login failed:", error);
+            if (role === "RECRUITER") {
+                navigate("/recruiter/dashboard");
+            } else if (role === "CANDIDATE") {
+                navigate("/candidate/dashboard");
+            } else if (role === "ADMIN") {
+                navigate("/admin/dashboard");
+            }
 
-    }
-  };
+            console.log("Login successful");
 
-  return (
-    <div>
-      <h1>Login</h1>
 
-      <form onSubmit={handleSubmit}>
+        } catch (error) {
 
+            console.error("Login failed:", error);
+
+        }
+    };
+
+    return (
         <div>
-          <label>Email</label>
+            <h1>Login</h1>
 
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="Enter your email"
-          />
+            <form onSubmit={handleSubmit}>
+
+                <div>
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        placeholder="Enter your email"
+                    />
+                </div>
+
+                <div>
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Enter your password"
+                    />
+                </div>
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
         </div>
-
-        <div>
-          <label>Password</label>
-
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Enter your password"
-          />
-        </div>
-
-        <button type="submit">
-          Login
-        </button>
-
-      </form>
-    </div>
-  );
+    );
 }
 
 export default Login;

@@ -8,6 +8,8 @@ import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
 import CandidateDashboard from "./pages/candidate/CandidateDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,17 +23,29 @@ function App() {
 
         <Route
           path="/recruiter/dashboard"
-          element={<RecruiterDashboard />}
+          element={
+            <ProtectedRoute allowedRole="RECRUITER">
+              <RecruiterDashboard />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/candidate/dashboard"
-          element={<CandidateDashboard />}
+          element={
+            <ProtectedRoute allowedRole="CANDIDATE">
+              <CandidateDashboard />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/admin/dashboard"
-          element={<AdminDashboard />}
+          element={
+            <ProtectedRoute allowedRole="ADMIN">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
 
       </Routes>
