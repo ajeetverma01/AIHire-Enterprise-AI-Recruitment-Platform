@@ -1,6 +1,9 @@
 import { useState } from "react";
-import axiosClient from "../api/axiosClient";
 import { useNavigate } from "react-router-dom";
+
+import axiosClient from "../api/axiosClient";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 function Login() {
 
@@ -8,6 +11,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -19,11 +23,11 @@ function Login() {
                 password,
             });
 
-            const { accessToken, refreshToken, userEmail, role } = response.data;
-            localStorage.setItem("accessToken", accessToken);
-            localStorage.setItem("refreshToken", refreshToken);
-            localStorage.setItem("email", userEmail);
-            localStorage.setItem("role", role);
+            login(response.data);
+
+            toast.success("Login successful!");
+
+            const role = response.data.role;
 
             if (role === "RECRUITER") {
                 navigate("/recruiter/dashboard");
@@ -33,49 +37,81 @@ function Login() {
                 navigate("/admin/dashboard");
             }
 
-            console.log("Login successful");
-
-
         } catch (error) {
 
-            console.error("Login failed:", error);
+            // console.error("Login failed:", error);
 
+            if (error.response) {
+                toast.error(
+                    error.response.data.message || "Invalid credentials."
+                );
+            } else {
+                toast.error(
+                    "Unable to connect to the server. Please try again."
+                );
+            }
         }
     };
 
     return (
-        <div>
-            <h1>Login</h1>
+        <div className="auth-page">
 
-            <form onSubmit={handleSubmit}>
+            <div className="auth-card">
 
-                <div>
-                    <label>Email</label>
-
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        placeholder="Enter your email"
-                    />
+                <div className="auth-header">
+                    <h1>AIHire</h1>
+                    <p>Welcome back</p>
                 </div>
 
-                <div>
-                    <label>Password</label>
+                <form onSubmit={handleSubmit}>
 
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        placeholder="Enter your password"
-                    />
-                </div>
+                    <div className="form-group">
+                        <label>Email</label>
 
-                <button type="submit">
-                    Login
-                </button>
+                        <input
+                            className="input"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
 
-            </form>
+                    <div className="form-group">
+                        <label>Password</label>
+
+                        <input
+                            className="input"
+                            type="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            placeholder="Enter your password"
+                            required
+                        />
+                    </div>
+
+                    <button
+                        className="btn btn-primary auth-button"
+                        type="submit"
+                    >
+                        Login
+                    </button>
+
+                </form>
+
+                <p className="auth-footer">
+                    Don't have an account?{" "}
+                    <button
+                        className="auth-link"
+                        onClick={() => navigate("/register")}
+                    >
+                        Register
+                    </button>
+                </p>
+
+            </div>
+
         </div>
     );
 }

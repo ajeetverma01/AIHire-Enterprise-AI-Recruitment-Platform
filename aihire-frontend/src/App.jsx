@@ -10,6 +10,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import CreateJob from "./pages/recruiter/CreateJob";
+
 function App() {
   return (
     <BrowserRouter>
@@ -48,7 +50,17 @@ function App() {
           }
         />
 
+        <Route
+          path="/recruiter/jobs/create"
+          element={
+            <ProtectedRoute allowedRole="RECRUITER">
+              <CreateJob />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
