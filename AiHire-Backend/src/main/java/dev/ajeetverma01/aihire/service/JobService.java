@@ -14,6 +14,10 @@ import dev.ajeetverma01.aihire.exception.UserNotFoundException;
 import dev.ajeetverma01.aihire.repository.JobRepository;
 import dev.ajeetverma01.aihire.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import dev.ajeetverma01.aihire.entity.EmploymentType;
+import dev.ajeetverma01.aihire.entity.JobStatus;
+import dev.ajeetverma01.aihire.specification.JobSpecification;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.UUID;
@@ -192,6 +196,36 @@ public class JobService {
         Job updatedJob = jobRepository.save(job);
 
         return mapToResponse(updatedJob);
+    }
+
+
+    public List<JobResponse> searchOpenJobs(
+            String location,
+            EmploymentType employmentType
+    ) {
+
+        Specification<Job> specification =
+                JobSpecification.hasStatus(JobStatus.OPEN);
+
+        if (location != null && !location.isBlank()) {
+
+            specification = specification.and(
+                    JobSpecification.hasLocation(location)
+            );
+        }
+
+        if (employmentType != null) {
+
+            specification = specification.and(
+                    JobSpecification.hasEmploymentType(employmentType)
+            );
+        }
+
+        List<Job> jobs = jobRepository.findAll(specification);
+
+        return jobs.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
 
