@@ -147,4 +147,36 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
     }
+
+    @ExceptionHandler(InvalidApplicationStatusTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleApplicationStatus(
+            InvalidApplicationStatusTransitionException exception
+    ) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(ApplicationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleApplicationNotFound(
+            ApplicationNotFoundException exception
+    ) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
 }

@@ -12,4 +12,5 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
             UUID candidateId
     );
     List<Application> findByCandidateId(UUID candidateId);
+    List<Application> findByJobRecruiterId(UUID recruiterId);
 }

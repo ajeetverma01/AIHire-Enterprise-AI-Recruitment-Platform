@@ -1,21 +1,18 @@
 package dev.ajeetverma01.aihire.service;
 
 import dev.ajeetverma01.aihire.dto.ApplicationResponse;
+import dev.ajeetverma01.aihire.dto.ChangeApplicationStatusRequest;
 import dev.ajeetverma01.aihire.dto.CreateApplicationRequest;
-import dev.ajeetverma01.aihire.entity.Application;
-import dev.ajeetverma01.aihire.entity.Job;
-import dev.ajeetverma01.aihire.entity.JobStatus;
-import dev.ajeetverma01.aihire.entity.User;
-import dev.ajeetverma01.aihire.exception.DuplicateResourceException;
-import dev.ajeetverma01.aihire.exception.JobNotFoundException;
-import dev.ajeetverma01.aihire.exception.UserNotFoundException;
+import dev.ajeetverma01.aihire.dto.RecruiterApplicationResponse;
+import dev.ajeetverma01.aihire.entity.*;
+import dev.ajeetverma01.aihire.exception.*;
 import dev.ajeetverma01.aihire.repository.ApplicationRepository;
 import dev.ajeetverma01.aihire.repository.JobRepository;
 import dev.ajeetverma01.aihire.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import dev.ajeetverma01.aihire.exception.InvalidJobStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ApplicationService {
@@ -89,5 +86,92 @@ public class ApplicationService {
                         application.getAppliedAt()
                 ))
                 .toList();
+    }
+
+
+    public List<RecruiterApplicationResponse> getRecruiterApplications(String recruiterEmail) {
+
+        User recruiter = userRepository.findByEmail(recruiterEmail)
+                .orElseThrow(() ->
+                        new UserNotFoundException("Recruiter not found")
+                );
+
+        List<Application> applications =
+                applicationRepository.findByJobRecruiterId(
+                        recruiter.getId()
+                );
+
+        return applications.stream()
+                .map(application -> new RecruiterApplicationResponse(
+                        application.getId(),
+                        application.getJob().getId(),
+                        application.getJob().getTitle(),
+                        application.getCandidate().getId(),
+                        application.getCandidate().getEmail(),
+                        application.getStatus(),
+                        application.getAppliedAt()
+                ))
+                .toList();
+    }
+
+    private boolean isValidStatusTransition(
+            ApplicationStatus currentStatus,
+            ApplicationStatus newStatus
+    ) {
+
+        return switch (currentStatus) {
+
+            case APPLIED ->
+                    newStatus == ApplicationStatus.SHORTLISTED
+                            || newStatus == ApplicationStatus.REJECTED;
+
+            case SHORTLISTED ->
+                    newStatus == ApplicationStatus.HIRED;
+
+            case REJECTED, HIRED ->
+                    false;
+        };
+    }
+
+    public void updateApplicationStatus(
+            UUID applicationId,
+            ChangeApplicationStatusRequest request,
+            String recruiterEmail
+    ) {
+
+        User recruiter = userRepository.findByEmail(recruiterEmail)
+                .orElseThrow(() ->
+                        new UserNotFoundException("Recruiter not found")
+                );
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() ->
+                        new ApplicationNotFoundException("Application not found")
+                );
+
+        if (!application.getJob().getRecruiter().getId()
+                .equals(recruiter.getId())) {
+
+            throw new UnauthorizedAccessException(
+                    "You are not allowed to update this application"
+            );
+        }
+
+        ApplicationStatus currentStatus = application.getStatus();
+        ApplicationStatus newStatus = request.status();
+
+        if (!isValidStatusTransition(currentStatus, newStatus)) {
+
+            throw new InvalidApplicationStatusTransitionException(
+                    "Invalid application status transition from "
+                            + currentStatus
+                            + " to "
+                            + newStatus
+            );
+        }
+
+        application.setStatus(newStatus);
+
+        applicationRepository.save(application);
     }
 }
