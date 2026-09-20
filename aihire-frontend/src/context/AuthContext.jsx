@@ -1,51 +1,82 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 
-  const [user, setUser] = useState({
-    email: localStorage.getItem("email"),
-    role: localStorage.getItem("role"),
-  });
+    const [user, setUser] = useState(() => {
 
-  const login = (loginResponse) => {
+        const accessToken = localStorage.getItem("accessToken");
+        const email = localStorage.getItem("email");
+        const role = localStorage.getItem("role");
 
-    const {
-      accessToken,
-      refreshToken,
-      email,
-      role
-    } = loginResponse;
+        if (!accessToken || !email || !role) {
+            return null;
+        }
 
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    localStorage.setItem("email", email);
-    localStorage.setItem("role", role);
-
-    setUser({
-      email,
-      role,
+        return {
+            email,
+            role,
+        };
     });
-  };
 
-  const logout = () => {
+    const login = (loginResponse) => {
 
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("email");
-    localStorage.removeItem("role");
+        const {
+            accessToken,
+            refreshToken,
+            email,
+            role
+        } = loginResponse;
 
-    setUser(null);
-  };
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("email", email);
+        localStorage.setItem("role", role);
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+        setUser({
+            email,
+            role,
+        });
+    };
+
+    const logout = () => {
+
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("email");
+        localStorage.removeItem("role");
+
+        setUser(null);
+    };
+
+    useEffect(() => {
+
+        const handleAuthExpired = () => {
+            logout();
+        };
+
+        window.addEventListener(
+            "auth-expired",
+            handleAuthExpired
+        );
+
+        return () => {
+            window.removeEventListener(
+                "auth-expired",
+                handleAuthExpired
+            );
+        };
+
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ user, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+    return useContext(AuthContext);
 }

@@ -1,27 +1,44 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-  },
+    baseURL: "http://localhost:8080",
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
 axiosClient.interceptors.request.use(
-  (config) => {
+    (config) => {
+        const accessToken = localStorage.getItem("accessToken");
 
-    const accessToken = localStorage.getItem("accessToken");
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
 
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
+);
 
-    return config;
-  },
+axiosClient.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response?.status === 401) {
 
-  (error) => {
-    return Promise.reject(error);
-  }
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("email");
+            localStorage.removeItem("role");
+
+            window.dispatchEvent(new Event("auth-expired"));
+        }
+
+        return Promise.reject(error);
+    }
 );
 
 export default axiosClient;
