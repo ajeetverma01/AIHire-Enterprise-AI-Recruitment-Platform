@@ -103,8 +103,8 @@ function RecruiterApplications() {
                                 </p>
 
                                 <div className="job-details">
-                                    <span>
-                                        Status: {application.status}
+                                    <span className={`status-badge status-${application.status.toLowerCase()}`}>
+                                        {application.status}
                                     </span>
                                 </div>
 
