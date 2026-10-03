@@ -164,6 +164,9 @@ function JobDetails() {
 
                         <button
                             className="btn btn-secondary"
+                            onClick={() =>
+                                navigate(`/recruiter/jobs/${job.id}/edit`)
+                            }
                         >
                             Edit Job
                         </button>
