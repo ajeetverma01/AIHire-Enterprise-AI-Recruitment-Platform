@@ -2,9 +2,6 @@ import axios from "axios";
 
 const axiosClient = axios.create({
     baseURL: "http://localhost:8080",
-    headers: {
-        "Content-Type": "application/json",
-    },
 });
 
 axiosClient.interceptors.request.use(
@@ -17,18 +14,14 @@ axiosClient.interceptors.request.use(
 
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
+
 axiosClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("email");

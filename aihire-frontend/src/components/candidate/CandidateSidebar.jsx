@@ -35,6 +35,16 @@ function CandidateSidebar() {
                 >
                     My Applications
                 </NavLink>
+
+
+                <NavLink
+                    to="/candidate/resumes"
+                    className={({ isActive }) =>
+                        isActive ? "nav-link active" : "nav-link"
+                    }
+                >
+                    My Resumes
+                </NavLink>
             </nav>
 
             <div className="sidebar-footer">

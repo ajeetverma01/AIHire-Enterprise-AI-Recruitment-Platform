@@ -21,6 +21,7 @@ import CandidateJobDetails from "./pages/candidate/CandidateJobDetails";
 import MyApplications from "./pages/candidate/MyApplications";
 
 import RecruiterApplications from "./pages/recruiter/RecruiterApplications";
+import ResumeManagement from "./pages/candidate/ResumeManagement";
 
 function App() {
   return (
@@ -147,6 +148,15 @@ function App() {
           element={
             <ProtectedRoute allowedRole="RECRUITER">
               <RecruiterApplications />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/candidate/resumes"
+          element={
+            <ProtectedRoute allowedRole="CANDIDATE">
+              <ResumeManagement />
             </ProtectedRoute>
           }
         />
