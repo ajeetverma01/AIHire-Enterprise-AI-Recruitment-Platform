@@ -478,3 +478,19 @@
 .btn-warning:hover {
     background: #3a311c;
 }
+.job-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.job-filters .input {
+    flex: 1;
+    min-width: 180px;
+}
+
+.job-filters button {
+    align-self: stretch;
+}
+

@@ -16,6 +16,10 @@ import JobDetails from "./pages/recruiter/JobDetails";
 import EditJob from "./pages/recruiter/EditJob";
 import GuestRoute from "./components/GuestRoute";
 
+
+import CandidateJobDetails from "./pages/candidate/CandidateJobDetails";
+import MyApplications from "./pages/candidate/MyApplications";
+
 function App() {
   return (
     <BrowserRouter>
@@ -114,6 +118,24 @@ function App() {
           element={
             <ProtectedRoute allowedRole="RECRUITER">
               <EditJob />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/candidate/jobs/:jobId"
+          element={
+            <ProtectedRoute allowedRole="CANDIDATE">
+              <CandidateJobDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/candidate/applications"
+          element={
+            <ProtectedRoute allowedRole="CANDIDATE">
+              <MyApplications />
             </ProtectedRoute>
           }
         />
