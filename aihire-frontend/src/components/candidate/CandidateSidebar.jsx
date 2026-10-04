@@ -1,3 +1,4 @@
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -36,7 +37,6 @@ function CandidateSidebar() {
                     My Applications
                 </NavLink>
 
-
                 <NavLink
                     to="/candidate/resumes"
                     className={({ isActive }) =>
@@ -45,10 +45,20 @@ function CandidateSidebar() {
                 >
                     My Resumes
                 </NavLink>
+
+                <NavLink
+                    to="/candidate/matches"
+                    className={({ isActive }) =>
+                        isActive ? "nav-link active" : "nav-link"
+                    }
+                >
+                    My Matches
+                </NavLink>
             </nav>
 
             <div className="sidebar-footer">
                 <p>{user?.email || "Candidate"}</p>
+
                 <button
                     className="btn btn-secondary"
                     onClick={handleLogout}

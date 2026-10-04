@@ -557,3 +557,152 @@
         width: 100%;
     }
 }
+
+
+.resume-card {
+    align-self: start;
+}
+
+.resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.analysis-results {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    overflow-wrap: anywhere;
+}
+
+.analysis-results section {
+    margin-top: 18px;
+}
+
+.analysis-results h4 {
+    margin-bottom: 8px;
+}
+
+.analysis-results p {
+    line-height: 1.7;
+}
+
+.analysis-list {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.analysis-list li {
+    margin-bottom: 5px;
+}
+
+.analysis-results small {
+    display: block;
+    margin-top: 18px;
+    opacity: 0.7;
+}
+
+.resume-matching-card {
+    margin-top: 24px;
+}
+
+.resume-matching-card > p {
+    line-height: 1.7;
+}
+
+.resume-matching-card label {
+    display: block;
+    margin: 18px 0 8px;
+}
+
+.resume-matching-card select {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 16px;
+}
+
+.match-score {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+}
+
+.match-score strong {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.match-disclaimer {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    line-height: 1.6;
+}
+
+
+
+.match-card {
+    align-self: start;
+}
+
+.match-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.match-score-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    min-height: 64px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    font-size: 1.15rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.match-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.match-card .analysis-results {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    overflow-wrap: anywhere;
+}
+
+.match-card .analysis-results section {
+    margin-top: 18px;
+}
+
+.match-card .analysis-results h4 {
+    margin-bottom: 8px;
+}
+
+.match-card .analysis-list {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+@media (max-width: 480px) {
+    .match-card-header {
+        flex-wrap: wrap;
+    }
+}
